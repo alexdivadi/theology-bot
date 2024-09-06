@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:theology_bot/app/features/chat/domain/chat.dart';
+import 'package:theology_bot/app/features/chat/domain/message.dart';
 import 'package:theology_bot/app/features/chat/presentation/chat_screen.dart';
 import 'package:theology_bot/app/features/profile/data/profile_repository.dart';
 
@@ -18,6 +19,7 @@ class ChatTableCell extends ConsumerWidget {
           backgroundImage: NetworkImage(chat.icon),
           onBackgroundImageError: (exception, stackTrace) {},
         ),
+        trailing: Text(lastMessage?.formattedDate ?? ''),
         title: Text(chat.name),
         subtitle: Text(
           lastMessage == null

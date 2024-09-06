@@ -19,6 +19,7 @@ class ProfileListScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(title),
+        actions: const [IconButton(onPressed: null, icon: Icon(Icons.add))],
       ),
       body: Padding(
         padding: const EdgeInsets.all(Sizes.p8),

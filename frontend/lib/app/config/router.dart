@@ -13,7 +13,7 @@ part 'router.g.dart';
 // private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorAKey = GlobalKey<NavigatorState>(debugLabel: 'chatList');
-final _shellNavigatorBKey = GlobalKey<NavigatorState>(debugLabel: 'profileGrid');
+final _shellNavigatorBKey = GlobalKey<NavigatorState>(debugLabel: 'profileList');
 
 @riverpod
 GoRouter goRouter(GoRouterRef ref) {

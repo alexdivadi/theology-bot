@@ -28,6 +28,10 @@ class ChatListScreen extends ConsumerWidget {
           return ChatTableCell(chat);
         },
       ),
+      floatingActionButton: const FloatingActionButton(
+        onPressed: null,
+        child: Icon(Icons.edit),
+      ),
     );
   }
 }
