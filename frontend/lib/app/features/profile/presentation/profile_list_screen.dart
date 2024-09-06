@@ -40,7 +40,7 @@ class ProfileListScreen extends ConsumerWidget {
 
   Widget _buildProfileCard(BuildContext context, Profile profile) {
     return GestureDetector(
-      onTap: () => context.pushNamed(ProfileScreen.name, extra: profile),
+      onTap: () => context.goNamed(ProfileScreen.name, extra: profile),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Sizes.p12),

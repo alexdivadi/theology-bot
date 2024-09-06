@@ -5,6 +5,7 @@ import 'package:theology_bot/app/features/chat/data/chat_repository.dart';
 import 'package:theology_bot/app/features/chat/domain/chat.dart';
 import 'package:theology_bot/app/features/chat/presentation/chat_screen.dart';
 import 'package:theology_bot/app/features/profile/domain/profile.dart';
+import 'package:theology_bot/app/features/profile/presentation/profile_list_screen.dart';
 import 'package:theology_bot/app/mock/profiles.dart';
 import 'package:theology_bot/app/shared/constants/app_sizes.dart';
 import 'package:theology_bot/app/shared/widgets/icon_button_with_label.dart';
@@ -32,7 +33,7 @@ class ProfileScreen extends ConsumerWidget {
 
       if (chatIndex != -1) {
         final id = chats[chatIndex].id;
-        context.pushReplacementNamed(
+        context.goNamed(
           ChatScreen.name,
           pathParameters: {
             ChatScreen.pathParam: id,
@@ -49,7 +50,7 @@ class ProfileScreen extends ConsumerWidget {
                 messages: [],
               ),
             );
-        context.pushReplacementNamed(
+        context.goNamed(
           ChatScreen.name,
           pathParameters: {
             ChatScreen.pathParam: id,
@@ -82,22 +83,24 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ),
           ),
-          if (Navigator.canPop(context))
-            SafeArea(
+          SafeArea(
+            child: Container(
+              padding: const EdgeInsets.all(Sizes.p16),
+              alignment: Alignment.topLeft,
               child: Container(
-                padding: const EdgeInsets.all(Sizes.p16),
-                alignment: Alignment.topLeft,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 56, 56, 66),
-                    borderRadius: BorderRadius.circular(Sizes.p24),
-                  ),
-                  child: const BackButton(
-                    color: Colors.white,
-                  ),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 56, 56, 66),
+                  borderRadius: BorderRadius.circular(Sizes.p24),
+                ),
+                child: BackButton(
+                  color: Colors.white,
+                  onPressed: Navigator.canPop(context)
+                      ? () => context.pop()
+                      : () => context.goNamed(ProfileListScreen.name),
                 ),
               ),
             ),
+          ),
           Container(
             color: const Color.fromARGB(122, 56, 56, 66),
             padding: const EdgeInsets.all(Sizes.p8),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:theology_bot/app/features/chat/data/chat_repository.dart';
 import 'package:theology_bot/app/features/chat/domain/message.dart';
+import 'package:theology_bot/app/features/chat/presentation/chat_list_screen.dart';
 import 'package:theology_bot/app/features/profile/data/profile_repository.dart';
 import 'package:theology_bot/app/features/profile/domain/profile.dart';
 import 'package:theology_bot/app/features/profile/presentation/profile_icon.dart';
@@ -52,10 +54,16 @@ class ChatScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: isGroupChat
           ? AppBar(
+              leading: BackButton(
+                onPressed: () => context.goNamed(ChatListScreen.name),
+              ),
               title: Text(chat.name),
             )
           : AppBar(
               toolbarHeight: 100,
+              leading: BackButton(
+                onPressed: () => context.goNamed(ChatListScreen.name),
+              ),
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(20),
                 child: Text(chat.name),

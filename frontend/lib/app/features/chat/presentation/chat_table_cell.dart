@@ -27,7 +27,7 @@ class ChatTableCell extends ConsumerWidget {
                   ).name}: ${lastMessage.text}''',
           overflow: TextOverflow.ellipsis,
         ),
-        onTap: () => context.pushNamed(
+        onTap: () => context.goNamed(
               ChatScreen.name,
               pathParameters: {
                 ChatScreen.pathParam: chat.id,

@@ -26,8 +26,8 @@ GoRouter goRouter(GoRouterRef ref) {
     },
     routes: [
       StatefulShellRoute.indexedStack(
-        builder: (_, __, navigationShell) {
-          return NavigationScaffold(navigationShell: navigationShell);
+        pageBuilder: (_, __, navigationShell) {
+          return NoTransitionPage(child: NavigationScaffold(navigationShell: navigationShell));
         },
         branches: [
           StatefulShellBranch(
@@ -46,7 +46,7 @@ GoRouter goRouter(GoRouterRef ref) {
           StatefulShellBranch(
             navigatorKey: _shellNavigatorBKey,
             routes: [
-              // Favorites View
+              // Profiles View
               GoRoute(
                 path: ProfileListScreen.path,
                 name: ProfileListScreen.name,
@@ -59,17 +59,17 @@ GoRouter goRouter(GoRouterRef ref) {
         ],
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: ChatScreen.path,
         name: ChatScreen.name,
-        pageBuilder: (_, state) {
-          return NoTransitionPage(
-            child: ChatScreen(
-              chatId: state.pathParameters[ChatScreen.pathParam]!,
-            ),
-          );
-        },
+        pageBuilder: (_, state) => NoTransitionPage(
+          child: ChatScreen(
+            chatId: state.pathParameters[ChatScreen.pathParam]!,
+          ),
+        ),
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: ProfileScreen.path,
         name: ProfileScreen.name,
         pageBuilder: (_, state) {

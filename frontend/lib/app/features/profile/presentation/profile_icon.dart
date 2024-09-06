@@ -15,7 +15,7 @@ class ProfileIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: () => context.pushReplacementNamed(
+        onTap: () => context.pushNamed(
           ProfileScreen.name,
           extra: profile,
         ),
