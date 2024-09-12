@@ -13,26 +13,26 @@ part 'langchain_repository.g.dart';
 class LangchainRepository extends _$LangchainRepository {
   late final String? openAiApiKey;
   late final OpenAIEmbeddings embeddings;
-  late final ObjectBoxVectorStore vectorStore;
+  Map<String, ObjectBoxVectorStore> vectorStoreMap = {};
   Map<String, RunnableSequence<String, String>> chainMap = {};
 
   @override
   void build() {
-    // TODO: update for web
     openAiApiKey = Platform.environment['OPENAI_API_KEY'];
     embeddings = OpenAIEmbeddings(apiKey: openAiApiKey);
-    vectorStore = ObjectBoxVectorStore(
-      embeddings: embeddings,
-      dimensions: 512,
-    );
-    ref.onDispose(() => vectorStore.close());
+    ref.onDispose(() {
+      for (var store in vectorStoreMap.values) {
+        store.close();
+      }
+    });
   }
 
-  Future<void> addDocuments(List<Document> documents) async {
+  Future<void> addDocuments(String profileId, List<Document> documents) async {
+    final vectorStore = _getOrCreateVectorStore(profileId);
     await vectorStore.addDocuments(documents: documents);
   }
 
-  Future<void> loadDocumentsFromWeb(List<String> urls) async {
+  Future<void> loadDocumentsFromWeb(String profileId, List<String> urls) async {
     final loader = WebBaseLoader(urls);
     final List<Document> docs = await loader.load();
 
@@ -44,10 +44,25 @@ class LangchainRepository extends _$LangchainRepository {
     final List<Document> chunkedDocs = await splitter.invoke(docs);
 
     // Add documents to vector store
-    await addDocuments(chunkedDocs);
+    await addDocuments(profileId, chunkedDocs);
+  }
+
+  ObjectBoxVectorStore _getOrCreateVectorStore(String profileId) {
+    if (!vectorStoreMap.containsKey(profileId)) {
+      final vectorStore = ObjectBoxVectorStore(
+        embeddings: embeddings,
+        dimensions: 512,
+        directory: 'path/to/db/$profileId',
+      );
+      vectorStoreMap[profileId] = vectorStore;
+    }
+    return vectorStoreMap[profileId]!;
   }
 
   Future<void> setUpRetrievalChain({Profile? profile}) async {
+    final profileId = profile?.id ?? 'NA';
+    final vectorStore = _getOrCreateVectorStore(profileId);
+
     // Define the retrieval chain
     final retriever = vectorStore.asRetriever();
     final setupAndRetrieval = Runnable.fromMap<String>({
@@ -73,17 +88,32 @@ the following in your response:\n{context}'''
     // Define the final chain
     final model = ChatOpenAI(apiKey: openAiApiKey);
     const outputParser = StringOutputParser<ChatResult>();
-    chainMap[profile?.id ?? 'NA'] =
-        setupAndRetrieval.pipe(promptTemplate).pipe(model).pipe(outputParser);
+    chainMap[profileId] = setupAndRetrieval.pipe(promptTemplate).pipe(model).pipe(outputParser);
   }
 
   Future<String> getResponse(String question, {Profile? profile}) async {
-    final id = profile?.id ?? 'NA';
-    if (!chainMap.containsKey(id)) {
-      setUpRetrievalChain(profile: profile);
+    final profileId = profile?.id ?? 'NA';
+    if (!chainMap.containsKey(profileId)) {
+      await setUpRetrievalChain(profile: profile);
     }
     // Run the pipeline
-    final res = await chainMap[id]!.invoke(question);
+    final res = await chainMap[profileId]!.invoke(question);
     return res;
   }
+
+  // TODO: persist chains?
+  // Future<void> saveChains() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final chainConfigs = chainMap.map((key, value) => MapEntry(key, value.toJson()));
+  //   await prefs.setString('chainConfigs', jsonEncode(chainConfigs));
+  // }
+
+  // Future<void> loadChains() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final chainConfigsString = prefs.getString('chainConfigs');
+  //   if (chainConfigsString != null) {
+  //     final chainConfigs = jsonDecode(chainConfigsString) as Map<String, dynamic>;
+  //     chainMap = chainConfigs.map((key, value) => MapEntry(key, RunnableSequence.fromJson(value)));
+  //   }
+  // }
 }
