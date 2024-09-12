@@ -18,6 +18,7 @@ class LangchainRepository extends _$LangchainRepository {
 
   @override
   void build() {
+    // TODO: update for web
     openAiApiKey = Platform.environment['OPENAI_API_KEY'];
     embeddings = OpenAIEmbeddings(apiKey: openAiApiKey);
     vectorStore = ObjectBoxVectorStore(
@@ -59,7 +60,13 @@ class LangchainRepository extends _$LangchainRepository {
     // Construct a RAG prompt template
     final thinker = profile?.name ?? 'a theologian';
     final promptTemplate = ChatPromptTemplate.fromTemplates([
-      (ChatMessageType.system, 'You are $thinker:\n{context}'),
+      (
+        ChatMessageType.system,
+        '''You are $thinker. Answer the user's question 
+using your theological knowledge given your time period and the given context.
+You may use information outside of the context, but please quote a segment from 
+the following in your response:\n{context}'''
+      ),
       const (ChatMessageType.human, '{question}'),
     ]);
 
