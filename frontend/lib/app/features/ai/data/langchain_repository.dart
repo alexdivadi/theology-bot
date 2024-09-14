@@ -5,7 +5,9 @@ import 'package:langchain/langchain.dart';
 import 'package:langchain_community/langchain_community.dart';
 import 'package:langchain_openai/langchain_openai.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:theology_bot/app/features/chat/domain/message.dart';
 import 'package:theology_bot/app/features/profile/domain/profile.dart';
+import 'package:theology_bot/app/mock/profiles.dart';
 
 part 'langchain_repository.g.dart';
 
@@ -18,6 +20,7 @@ class LangchainRepository extends _$LangchainRepository {
 
   @override
   void build() {
+    // TODO: make web-safe and set up env vars
     openAiApiKey = Platform.environment['OPENAI_API_KEY'];
     embeddings = OpenAIEmbeddings(apiKey: openAiApiKey);
     ref.onDispose(() {
@@ -47,12 +50,19 @@ class LangchainRepository extends _$LangchainRepository {
     await addDocuments(profileId, chunkedDocs);
   }
 
+  String formatChatHistory(final List<Message> chatHistory) {
+    final formattedDialogueTurns = chatHistory.map(
+      (final message) => '${message.senderId == userProfile.id ? '👨' : '🤖'}}: ${message.text}',
+    );
+    return formattedDialogueTurns.join('\n');
+  }
+
   ObjectBoxVectorStore _getOrCreateVectorStore(String profileId) {
     if (!vectorStoreMap.containsKey(profileId)) {
       final vectorStore = ObjectBoxVectorStore(
         embeddings: embeddings,
         dimensions: 512,
-        directory: 'path/to/db/$profileId',
+        directory: 'db/$profileId',
       );
       vectorStoreMap[profileId] = vectorStore;
     }
@@ -100,20 +110,10 @@ the following in your response:\n{context}'''
     final res = await chainMap[profileId]!.invoke(question);
     return res;
   }
-
-  // TODO: persist chains?
-  // Future<void> saveChains() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final chainConfigs = chainMap.map((key, value) => MapEntry(key, value.toJson()));
-  //   await prefs.setString('chainConfigs', jsonEncode(chainConfigs));
-  // }
-
-  // Future<void> loadChains() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final chainConfigsString = prefs.getString('chainConfigs');
-  //   if (chainConfigsString != null) {
-  //     final chainConfigs = jsonDecode(chainConfigsString) as Map<String, dynamic>;
-  //     chainMap = chainConfigs.map((key, value) => MapEntry(key, RunnableSequence.fromJson(value)));
-  //   }
-  // }
 }
+
+// @riverpod
+// Future<String> generateResponse(GenerateResponseRef ref) async {
+//   final langchainRepository = ref.watch(langchainRepositoryProvider.notifier);
+//   return langchainRepository.getResponse();
+// }
