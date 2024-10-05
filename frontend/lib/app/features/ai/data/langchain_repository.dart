@@ -4,25 +4,28 @@ import 'dart:io';
 import 'package:langchain/langchain.dart';
 import 'package:langchain_community/langchain_community.dart';
 import 'package:langchain_openai/langchain_openai.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:theology_bot/app/features/ai/data/tb_vector_store.dart';
 import 'package:theology_bot/app/features/chat/domain/message.dart';
 import 'package:theology_bot/app/features/profile/domain/profile.dart';
 import 'package:theology_bot/app/mock/profiles.dart';
+import 'package:path/path.dart' as p;
+import 'package:theology_bot/env/env.dart';
+import 'package:theology_bot/objectbox.g.dart';
 
 part 'langchain_repository.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class LangchainRepository extends _$LangchainRepository {
   late final String? openAiApiKey;
   late final OpenAIEmbeddings embeddings;
-  Map<String, ObjectBoxVectorStore> vectorStoreMap = {};
+  Map<String, TbVectorStore> vectorStoreMap = {};
   Map<String, RunnableSequence<String, String>> chainMap = {};
 
   @override
   void build() {
-    // TODO: make web-safe and set up env vars
-    openAiApiKey = Platform.environment['OPENAI_API_KEY'];
-    embeddings = OpenAIEmbeddings(apiKey: openAiApiKey);
+    embeddings = OpenAIEmbeddings(apiKey: Env.openaiApiKey);
     ref.onDispose(() {
       for (var store in vectorStoreMap.values) {
         store.close();
@@ -31,7 +34,7 @@ class LangchainRepository extends _$LangchainRepository {
   }
 
   Future<void> addDocuments(String profileId, List<Document> documents) async {
-    final vectorStore = _getOrCreateVectorStore(profileId);
+    final vectorStore = await _getOrCreateVectorStore(profileId);
     await vectorStore.addDocuments(documents: documents);
   }
 
@@ -57,21 +60,21 @@ class LangchainRepository extends _$LangchainRepository {
     return formattedDialogueTurns.join('\n');
   }
 
-  ObjectBoxVectorStore _getOrCreateVectorStore(String profileId) {
-    if (!vectorStoreMap.containsKey(profileId)) {
-      final vectorStore = ObjectBoxVectorStore(
+  FutureOr<BaseObjectBoxVectorStore> _getOrCreateVectorStore(String chatId) async {
+    if (!vectorStoreMap.containsKey(chatId)) {
+      final docsDir = await getApplicationDocumentsDirectory();
+      final store = await openStore(directory: p.join(docsDir.path, chatId));
+      final vectorStore = TbVectorStore(
         embeddings: embeddings,
-        dimensions: 512,
-        directory: 'db/$profileId',
+        store: store,
       );
-      vectorStoreMap[profileId] = vectorStore;
+      vectorStoreMap[chatId] = vectorStore;
     }
-    return vectorStoreMap[profileId]!;
+    return vectorStoreMap[chatId]!;
   }
 
-  Future<void> setUpRetrievalChain({Profile? profile}) async {
-    final profileId = profile?.id ?? 'NA';
-    final vectorStore = _getOrCreateVectorStore(profileId);
+  Future<void> setUpRetrievalChain({required String id, Profile? profile}) async {
+    final vectorStore = await _getOrCreateVectorStore(id);
 
     // Define the retrieval chain
     final retriever = vectorStore.asRetriever();
@@ -98,16 +101,20 @@ the following in your response:\n{context}'''
     // Define the final chain
     final model = ChatOpenAI(apiKey: openAiApiKey);
     const outputParser = StringOutputParser<ChatResult>();
-    chainMap[profileId] = setupAndRetrieval.pipe(promptTemplate).pipe(model).pipe(outputParser);
+    chainMap[id] = setupAndRetrieval.pipe(promptTemplate).pipe(model).pipe(outputParser);
   }
 
-  Future<String> getResponse(String question, {Profile? profile}) async {
-    final profileId = profile?.id ?? 'NA';
-    if (!chainMap.containsKey(profileId)) {
-      await setUpRetrievalChain(profile: profile);
+  Future<String> getResponse(
+    String question, {
+    String? chatId,
+    Profile? profile,
+  }) async {
+    final id = chatId ?? 'NA';
+    if (!chainMap.containsKey(id)) {
+      await setUpRetrievalChain(id: id, profile: profile);
     }
     // Run the pipeline
-    final res = await chainMap[profileId]!.invoke(question);
+    final res = await chainMap[id]!.invoke(question);
     return res;
   }
 }

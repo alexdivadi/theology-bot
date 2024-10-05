@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:theology_bot/app/features/chat/data/chat_repository.dart';
 import 'package:theology_bot/app/features/chat/domain/message.dart';
 import 'package:theology_bot/app/features/chat/presentation/chat_list_screen.dart';
+import 'package:theology_bot/app/features/chat/presentation/chat_screen_controller.dart';
 import 'package:theology_bot/app/features/profile/data/profile_repository.dart';
 import 'package:theology_bot/app/features/profile/domain/profile.dart';
 import 'package:theology_bot/app/features/profile/presentation/profile_icon.dart';
@@ -37,16 +38,7 @@ class ChatScreen extends HookConsumerWidget {
 
     void sendMessage() {
       if (textController.text.isNotEmpty) {
-        ref.read(chatRepositoryProvider.notifier).addMessage(
-              chat.id,
-              Message(
-                id: '${chat.messages.length + 1}',
-                chatId: chat.id,
-                senderId: userProfile.id,
-                text: textController.text,
-                timestamp: DateTime.now(),
-              ),
-            );
+        ref.read(chatScreenControllerProvider.notifier).sendMessage(chat, textController.text);
       }
       textController.clear();
     }
