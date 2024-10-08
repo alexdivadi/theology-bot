@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:theology_bot/app/features/chat/data/chat_repository.dart';
+import 'package:theology_bot/app/features/chat/domain/chat.dart';
 import 'package:theology_bot/app/features/chat/domain/message.dart';
 import 'package:theology_bot/app/features/chat/presentation/chat_list_screen.dart';
 import 'package:theology_bot/app/features/chat/presentation/chat_screen_controller.dart';
@@ -33,7 +34,6 @@ class ChatScreen extends HookConsumerWidget {
         (p) => p.firstWhere((elem) => elem.id == chatId),
       ),
     );
-
     final isGroupChat = chat.participantIds.length > 2;
 
     void sendMessage() {
@@ -72,9 +72,10 @@ class ChatScreen extends HookConsumerWidget {
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.all(Sizes.p16),
+                reverse: true,
                 itemCount: chat.messages.length,
                 itemBuilder: (context, index) {
-                  final message = chat.messages[index];
+                  final message = chat.messagesReversed[index];
                   final senderProfile =
                       ref.read(profileRepositoryProvider.notifier).getProfile(message.senderId);
                   return _buildMessageBubble(

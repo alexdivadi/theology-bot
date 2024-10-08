@@ -31,12 +31,16 @@ class ChatScreenController extends _$ChatScreenController {
         final newMessage = await ref
             .read(langchainRepositoryProvider.notifier)
             .getResponse(message, chatId: chat.id);
+        log(newMessage);
+        log(chat.participantIds.first);
         ref.read(chatRepositoryProvider.notifier).addMessage(
               chat.id,
               Message(
                 id: '${chat.messages.length + 1}',
                 chatId: chat.id,
-                senderId: userProfile.id,
+                senderId: chat.participantIds.firstWhere(
+                  (p) => p != userProfile.id,
+                ),
                 text: newMessage,
                 timestamp: DateTime.now(),
               ),

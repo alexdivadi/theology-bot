@@ -7,7 +7,7 @@ part of 'langchain_repository.dart';
 // **************************************************************************
 
 String _$langchainRepositoryHash() =>
-    r'4020194fd9586b2b4c881b3c3bb55944f3dcf126';
+    r'f519caed81fbbefc83ce77cf00e7e5540165c00f';
 
 /// See also [LangchainRepository].
 @ProviderFor(LangchainRepository)

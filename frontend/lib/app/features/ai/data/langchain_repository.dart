@@ -1,6 +1,3 @@
-// 1. Create a vector store and add documents to it
-import 'dart:io';
-
 import 'package:langchain/langchain.dart';
 import 'package:langchain_community/langchain_community.dart';
 import 'package:langchain_openai/langchain_openai.dart';
@@ -18,7 +15,6 @@ part 'langchain_repository.g.dart';
 
 @Riverpod(keepAlive: true)
 class LangchainRepository extends _$LangchainRepository {
-  late final String? openAiApiKey;
   late final OpenAIEmbeddings embeddings;
   Map<String, TbVectorStore> vectorStoreMap = {};
   Map<String, RunnableSequence<String, String>> chainMap = {};
@@ -99,7 +95,7 @@ the following in your response:\n{context}'''
     ]);
 
     // Define the final chain
-    final model = ChatOpenAI(apiKey: openAiApiKey);
+    final model = ChatOpenAI(apiKey: Env.openaiApiKey);
     const outputParser = StringOutputParser<ChatResult>();
     chainMap[id] = setupAndRetrieval.pipe(promptTemplate).pipe(model).pipe(outputParser);
   }
