@@ -15,13 +15,18 @@ part 'langchain_repository.g.dart';
 
 @Riverpod(keepAlive: true)
 class LangchainRepository extends _$LangchainRepository {
-  late final OpenAIEmbeddings embeddings;
+  final OpenAIEmbeddings embeddings = OpenAIEmbeddings(
+    apiKey: Env.openaiApiKey,
+  );
+  final model = ChatOpenAI(
+    apiKey: Env.openaiApiKey,
+    defaultOptions: const ChatOpenAIOptions(model: 'gpt-3.5-turbo'),
+  );
   Map<String, TbVectorStore> vectorStoreMap = {};
   Map<String, RunnableSequence<String, String>> chainMap = {};
 
   @override
   void build() {
-    embeddings = OpenAIEmbeddings(apiKey: Env.openaiApiKey);
     ref.onDispose(() {
       for (var store in vectorStoreMap.values) {
         store.close();
@@ -95,7 +100,6 @@ the following in your response:\n{context}'''
     ]);
 
     // Define the final chain
-    final model = ChatOpenAI(apiKey: Env.openaiApiKey);
     const outputParser = StringOutputParser<ChatResult>();
     chainMap[id] = setupAndRetrieval.pipe(promptTemplate).pipe(model).pipe(outputParser);
   }
