@@ -18,7 +18,7 @@ class Chat with _$Chat {
 }
 
 extension ReversedChat on Chat {
-  List<Message> get messagesReversed => [for (final e in messages.reversed.toList()) e];
+  List<Message> get messagesReversed => messages.reversed.toList();
 }
 
 extension MutableChat on Chat {

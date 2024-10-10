@@ -9,7 +9,7 @@ import 'package:theology_bot/app/mock/profiles.dart';
 
 part 'chat_screen_controller.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class ChatScreenController extends _$ChatScreenController {
   @override
   FutureOr<void> build() async => null;

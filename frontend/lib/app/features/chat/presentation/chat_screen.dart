@@ -7,6 +7,7 @@ import 'package:theology_bot/app/features/chat/domain/chat.dart';
 import 'package:theology_bot/app/features/chat/domain/message.dart';
 import 'package:theology_bot/app/features/chat/presentation/chat_list_screen.dart';
 import 'package:theology_bot/app/features/chat/presentation/chat_screen_controller.dart';
+import 'package:theology_bot/app/features/chat/presentation/message_input_field.dart';
 import 'package:theology_bot/app/features/profile/data/profile_repository.dart';
 import 'package:theology_bot/app/features/profile/domain/profile.dart';
 import 'package:theology_bot/app/features/profile/presentation/profile_icon.dart';
@@ -34,13 +35,15 @@ class ChatScreen extends HookConsumerWidget {
         (p) => p.firstWhere((elem) => elem.id == chatId),
       ),
     );
+    final state = ref.watch(chatScreenControllerProvider);
     final isGroupChat = chat.participantIds.length > 2;
 
     void sendMessage() {
-      if (textController.text.isNotEmpty) {
-        ref.read(chatScreenControllerProvider.notifier).sendMessage(chat, textController.text);
+      final message = textController.text.trim();
+      if (message.isNotEmpty) {
+        ref.read(chatScreenControllerProvider.notifier).sendMessage(chat, message);
+        textController.clear();
       }
-      textController.clear();
     }
 
     return Scaffold(
@@ -86,27 +89,9 @@ class ChatScreen extends HookConsumerWidget {
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(Sizes.p16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: textController,
-                      decoration: InputDecoration(
-                        hintText: 'Type a message',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(Sizes.p12),
-                        ),
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.send),
-                    onPressed: sendMessage,
-                  ),
-                ],
-              ),
+            MessageInputField(
+              controller: textController,
+              onSend: state.isLoading ? null : sendMessage,
             ),
           ],
         ),
