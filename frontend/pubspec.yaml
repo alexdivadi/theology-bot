@@ -7,6 +7,7 @@ environment:
   sdk: ^3.5.0
 
 dependencies:
+  envied: ^0.5.4+1
   flutter:
     sdk: flutter
   flutter_hooks: ^0.20.5
@@ -15,15 +16,24 @@ dependencies:
   hooks_riverpod: ^2.5.2
   intl: ^0.19.0
   json_annotation: ^4.9.0
+  langchain: ^0.7.5
+  langchain_community: ^0.3.1
+  langchain_openai: ^0.7.1
+  objectbox: ^4.0.2
+  objectbox_flutter_libs: any
+  path: ^1.9.0
+  path_provider: ^2.1.4
   riverpod_annotation: ^2.3.5
 
 dev_dependencies:
   build_runner: ^2.4.12
+  envied_generator: ^0.5.4+1
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
   freezed: ^2.0.0
   json_serializable: ^6.0.1
+  objectbox_generator: any
   riverpod_generator: ^2.4.3
 
 flutter:

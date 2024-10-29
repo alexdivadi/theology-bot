@@ -24,9 +24,9 @@ class ChatTableCell extends ConsumerWidget {
         subtitle: Text(
           lastMessage == null
               ? 'No messages'
-              : '''${ref.read(profileRepositoryProvider.notifier).getProfile(
+              : '''${chat.participantIds.length > 2 ? '${ref.read(profileRepositoryProvider.notifier).getProfile(
                     lastMessage.senderId,
-                  ).name}: ${lastMessage.text}''',
+                  ).name}: ' : ''}${lastMessage.text}''',
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () => context.goNamed(

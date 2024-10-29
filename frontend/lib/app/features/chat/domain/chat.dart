@@ -17,6 +17,10 @@ class Chat with _$Chat {
   factory Chat.fromJson(Map<String, dynamic> json) => _$ChatFromJson(json);
 }
 
+extension ReversedChat on Chat {
+  List<Message> get messagesReversed => messages.reversed.toList();
+}
+
 extension MutableChat on Chat {
   Chat addMessage(Message message) => copyWith(
         messages: [...messages, message],
