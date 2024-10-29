@@ -89,6 +89,7 @@ class ChatScreen extends HookConsumerWidget {
                 },
               ),
             ),
+            if (state.isLoading) CircularProgressIndicator.adaptive(),
             MessageInputField(
               controller: textController,
               onSend: state.isLoading ? null : sendMessage,

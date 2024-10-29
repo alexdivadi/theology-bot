@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:langchain/langchain.dart';
 import 'package:langchain_community/langchain_community.dart';
 import 'package:langchain_openai/langchain_openai.dart';
@@ -24,9 +27,11 @@ class LangchainRepository extends _$LangchainRepository {
   );
   Map<String, TbVectorStore> vectorStoreMap = {};
   Map<String, RunnableSequence<String, String>> chainMap = {};
+  static const maxMemorySize = 1024 * 1024 * 5; // 5MB
 
   @override
   void build() {
+    // TODO: load up saved chat history
     ref.onDispose(() {
       for (var store in vectorStoreMap.values) {
         store.close();
@@ -37,6 +42,37 @@ class LangchainRepository extends _$LangchainRepository {
   Future<void> addDocuments(String profileId, List<Document> documents) async {
     final vectorStore = await _getOrCreateVectorStore(profileId);
     await vectorStore.addDocuments(documents: documents);
+  }
+
+  Future<void> loadDocumentsFromFirebaseStorage(String profileId) async {
+    final vectorStore = await _getOrCreateVectorStore(profileId);
+    final storageRef = FirebaseStorage.instance.ref().child(profileId);
+    final textRefs = await storageRef.listAll();
+    for (final result in textRefs.items) {
+      final text = await result.getData(maxMemorySize);
+      if (text != null) {
+        await vectorStore.addDocuments(documents: [
+          Document(
+            metadata: {'name': result.name},
+            pageContent: utf8.decode(text),
+          ),
+        ]);
+      } else {
+        throw Exception('Failed to load document');
+      }
+    }
+  }
+
+  Stream<ListResult> listAllPaginated(Reference storageRef) async* {
+    String? pageToken;
+    do {
+      final listResult = await storageRef.list(ListOptions(
+        maxResults: 1,
+        pageToken: pageToken,
+      ));
+      yield listResult;
+      pageToken = listResult.nextPageToken;
+    } while (pageToken != null);
   }
 
   Future<void> loadDocumentsFromWeb(String profileId, List<String> urls) async {
@@ -87,6 +123,8 @@ class LangchainRepository extends _$LangchainRepository {
     });
 
     // Construct a RAG prompt template
+    // TODO: add message history
+    // formatChatHistory()
     final thinker = profile?.name ?? 'a theologian';
     final promptTemplate = ChatPromptTemplate.fromTemplates([
       (

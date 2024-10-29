@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "552532248856",
+    "project_id": "theology-bot",
+    "storage_bucket": "theology-bot.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:552532248856:android:07077b26e378721f61f66d",
+        "android_client_info": {
+          "package_name": "com.theologybot.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsYzJTdhSmNtP4B0_mr96CIbhjSpng23s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
