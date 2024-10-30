@@ -11,7 +11,7 @@
       "program": "lib/main_development.dart",
       "args": [
         "--flavor", "dev", 
-        "--target", "lib/main_development.dart"
+        "--target", "lib/main_development.dart",
       ]
     },
     {

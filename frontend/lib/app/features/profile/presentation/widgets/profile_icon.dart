@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:theology_bot/app/features/profile/domain/profile.dart';
-import 'package:theology_bot/app/features/profile/presentation/profile_screen.dart';
+import 'package:theology_bot/app/features/profile/presentation/screens/profile_screen.dart';
 
 class ProfileIcon extends StatelessWidget {
   const ProfileIcon(

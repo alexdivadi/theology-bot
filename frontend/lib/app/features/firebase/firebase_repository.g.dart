@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'chat_repository.dart';
+part of 'firebase_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chatRepositoryHash() => r'49fb8d4f91b97fffcfc2e5e3090e2b1193a9cd88';
+String _$firebaseStorageHash() => r'bf168e6f68b7c74bfc63008e321cf588e3df0ec2';
 
-/// See also [ChatRepository].
-@ProviderFor(ChatRepository)
-final chatRepositoryProvider =
-    AutoDisposeNotifierProvider<ChatRepository, List<Chat>>.internal(
-  ChatRepository.new,
-  name: r'chatRepositoryProvider',
+/// See also [firebaseStorage].
+@ProviderFor(firebaseStorage)
+final firebaseStorageProvider = Provider<FirebaseStorage?>.internal(
+  firebaseStorage,
+  name: r'firebaseStorageProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$chatRepositoryHash,
+      : _$firebaseStorageHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ChatRepository = AutoDisposeNotifier<List<Chat>>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef FirebaseStorageRef = ProviderRef<FirebaseStorage?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

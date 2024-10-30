@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:theology_bot/app/features/chat/data/chat_repository.dart';
-import 'package:theology_bot/app/features/chat/presentation/chat_table_cell.dart';
+import 'package:theology_bot/app/features/chat/presentation/widgets/chat_table_cell.dart';
 import 'package:theology_bot/app/shared/constants/app_sizes.dart';
 
 class ChatListScreen extends ConsumerWidget {

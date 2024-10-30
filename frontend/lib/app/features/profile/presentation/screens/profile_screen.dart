@@ -3,10 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:theology_bot/app/features/chat/data/chat_repository.dart';
 import 'package:theology_bot/app/features/chat/domain/chat.dart';
-import 'package:theology_bot/app/features/chat/presentation/chat_screen.dart';
+import 'package:theology_bot/app/features/chat/presentation/screens/chat_screen.dart';
 import 'package:theology_bot/app/features/profile/domain/profile.dart';
-import 'package:theology_bot/app/features/profile/presentation/profile_list_screen.dart';
-import 'package:theology_bot/app/mock/profiles.dart';
+import 'package:theology_bot/app/features/profile/presentation/screens/profile_list_screen.dart';
+import 'package:theology_bot/app/mock/data/profiles.dart';
 import 'package:theology_bot/app/shared/constants/app_sizes.dart';
 import 'package:theology_bot/app/shared/widgets/icon_button_with_label.dart';
 

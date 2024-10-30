@@ -53,17 +53,17 @@ android {
 
     flavorDimensions "default"
     productFlavors { 
-        production {
+        prod {
             dimension "default"
             applicationIdSuffix ""
             manifestPlaceholders = [appName: "TheologyBot"]
         }
-        staging {
+        stg {
             dimension "default"
             applicationIdSuffix ".stg"
             manifestPlaceholders = [appName: "[STG]TheologyBot"]
         }
-        development {
+        dev {
             dimension "default"
             applicationIdSuffix ".dev"
             manifestPlaceholders = [appName: "[DEV]TheologyBot"]

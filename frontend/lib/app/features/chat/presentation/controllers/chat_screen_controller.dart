@@ -5,7 +5,8 @@ import 'package:theology_bot/app/features/ai/data/langchain_repository.dart';
 import 'package:theology_bot/app/features/chat/data/chat_repository.dart';
 import 'package:theology_bot/app/features/chat/domain/chat.dart';
 import 'package:theology_bot/app/features/chat/domain/message.dart';
-import 'package:theology_bot/app/mock/profiles.dart';
+import 'package:theology_bot/app/features/profile/data/profile_repository.dart';
+import 'package:theology_bot/app/mock/data/profiles.dart';
 
 part 'chat_screen_controller.g.dart';
 
@@ -16,6 +17,15 @@ class ChatScreenController extends _$ChatScreenController {
 
   FutureOr<void> sendMessage(Chat chat, String message) async {
     state = const AsyncLoading();
+    final profile = chat.participantIds.length == 2
+        // get the other chatter's profile
+        ? ref.read(profileRepositoryProvider.notifier).getProfile(
+              chat.participantIds.singleWhere(
+                (member) => member != userProfile.id,
+              ),
+            )
+        : null;
+
     ref.read(chatRepositoryProvider.notifier).addMessage(
           chat.id,
           Message(
@@ -30,7 +40,7 @@ class ChatScreenController extends _$ChatScreenController {
       () async {
         final newMessage = await ref
             .read(langchainRepositoryProvider.notifier)
-            .getResponse(message, chatId: chat.id);
+            .getResponse(message, chatId: chat.id, profile: profile);
         log(newMessage);
         log(chat.participantIds.first);
         ref.read(chatRepositoryProvider.notifier).addMessage(

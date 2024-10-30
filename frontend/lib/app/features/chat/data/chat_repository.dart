@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:theology_bot/app/features/chat/domain/chat.dart';
 import 'package:theology_bot/app/features/chat/domain/message.dart';
-import 'package:theology_bot/app/mock/chats.dart';
+import 'package:theology_bot/app/mock/data/chats.dart';
 
 part 'chat_repository.g.dart';
 

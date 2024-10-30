@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'theology-bot.appspot.com',
     measurementId: 'G-PDPNW3CCPF',
   );
+
 }

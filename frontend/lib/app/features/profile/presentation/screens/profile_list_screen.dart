@@ -3,7 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:theology_bot/app/features/profile/data/profile_repository.dart';
 import 'package:theology_bot/app/features/profile/domain/profile.dart';
-import 'package:theology_bot/app/features/profile/presentation/profile_screen.dart';
+import 'package:theology_bot/app/features/profile/presentation/screens/add_profile_screen.dart';
+import 'package:theology_bot/app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:theology_bot/app/shared/constants/app_sizes.dart';
 
 class ProfileListScreen extends ConsumerWidget {
@@ -19,7 +20,12 @@ class ProfileListScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(title),
-        actions: const [IconButton(onPressed: null, icon: Icon(Icons.add))],
+        actions: [
+          IconButton(
+            onPressed: () => context.pushNamed(AddProfileScreen.name),
+            icon: const Icon(Icons.add),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(Sizes.p8),
@@ -63,7 +69,7 @@ class ProfileListScreen extends ConsumerWidget {
               child: Text(
                 profile.name,
                 style: const TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 14.0,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,

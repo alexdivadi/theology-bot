@@ -7,7 +7,7 @@ part of 'langchain_repository.dart';
 // **************************************************************************
 
 String _$langchainRepositoryHash() =>
-    r'3079ddd47a12755bf7ea12d7609dc55c7ab1faad';
+    r'7bcdad0c11abebbdffa3e5b3d6a1a60d834eb0e4';
 
 /// See also [LangchainRepository].
 @ProviderFor(LangchainRepository)
@@ -24,4 +24,4 @@ final langchainRepositoryProvider =
 
 typedef _$LangchainRepository = Notifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

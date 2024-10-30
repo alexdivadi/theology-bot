@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:theology_bot/app/features/profile/domain/profile.dart';
-import 'package:theology_bot/app/features/profile/presentation/profile_icon.dart';
+import 'package:theology_bot/app/features/profile/presentation/widgets/profile_icon.dart';
 import 'package:theology_bot/app/shared/constants/app_sizes.dart';
 
 class ProfileTableCell extends StatelessWidget {
@@ -28,7 +28,7 @@ class ProfileTableCell extends StatelessWidget {
       profile,
       padding: Sizes.p4,
       iconSize: 16,
-      titleTextSize: 12,
+      titleTextSize: 10,
       showSubtitle: false,
       gapSize: Sizes.p4,
     );

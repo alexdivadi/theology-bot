@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:theology_bot/app/config/navigation_scaffold.dart';
-import 'package:theology_bot/app/features/chat/presentation/chat_list_screen.dart';
-import 'package:theology_bot/app/features/chat/presentation/chat_screen.dart';
+import 'package:theology_bot/app/features/chat/presentation/screens/chat_list_screen.dart';
+import 'package:theology_bot/app/features/chat/presentation/screens/chat_screen.dart';
 import 'package:theology_bot/app/features/profile/domain/profile.dart';
-import 'package:theology_bot/app/features/profile/presentation/profile_list_screen.dart';
-import 'package:theology_bot/app/features/profile/presentation/profile_screen.dart';
+import 'package:theology_bot/app/features/profile/presentation/screens/add_profile_screen.dart';
+import 'package:theology_bot/app/features/profile/presentation/screens/profile_list_screen.dart';
+import 'package:theology_bot/app/features/profile/presentation/screens/profile_screen.dart';
 
 part 'router.g.dart';
 
@@ -48,12 +49,20 @@ GoRouter goRouter(GoRouterRef ref) {
             routes: [
               // Profiles View
               GoRoute(
-                path: ProfileListScreen.path,
-                name: ProfileListScreen.name,
-                pageBuilder: (_, __) => const NoTransitionPage(
-                  child: ProfileListScreen(),
-                ),
-              ),
+                  path: ProfileListScreen.path,
+                  name: ProfileListScreen.name,
+                  pageBuilder: (_, __) => const NoTransitionPage(
+                        child: ProfileListScreen(),
+                      ),
+                  routes: [
+                    GoRoute(
+                      path: AddProfileScreen.path,
+                      name: AddProfileScreen.name,
+                      pageBuilder: (_, __) => const NoTransitionPage(
+                        child: AddProfileScreen(),
+                      ),
+                    ),
+                  ]),
             ],
           ),
         ],
