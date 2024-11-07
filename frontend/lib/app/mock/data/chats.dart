@@ -4,17 +4,16 @@ import 'package:theology_bot/app/mock/data/profiles.dart';
 
 final Chat chat1 = Chat(
   id: '1',
-  name: 'General Chat',
-  icon: 'https://example.com/icon.png',
+  name: 'General',
+  icon: defaultProfile.profileThumbnail,
   participantIds: [
     userProfile.id,
-    profile1.id,
-    profile2.id,
+    defaultProfile.id,
   ],
-  messages: mockRecentMessages,
+  messages: mockRecentMessages1,
 );
 final Chat chat2 = Chat(
-  id: profile1.id,
+  id: '2',
   name: profile1.name,
   icon: profile1.profileThumbnail,
   participantIds: [

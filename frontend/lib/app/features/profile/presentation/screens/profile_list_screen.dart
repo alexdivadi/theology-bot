@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:theology_bot/app/features/profile/data/profile_repository.dart';
+import 'package:theology_bot/app/features/profile/data/profile_box.dart';
 import 'package:theology_bot/app/features/profile/domain/profile.dart';
 import 'package:theology_bot/app/features/profile/presentation/screens/add_profile_screen.dart';
 import 'package:theology_bot/app/features/profile/presentation/screens/profile_screen.dart';
@@ -16,7 +16,7 @@ class ProfileListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profiles = ref.watch(profileRepositoryProvider);
+    final profiles = ref.watch(profilesProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text(title),

@@ -1,7 +1,17 @@
 import 'package:theology_bot/app/features/chat/domain/message.dart';
 import 'package:theology_bot/app/mock/data/profiles.dart';
 
-final List<Message> mockRecentMessages = [
+final List<Message> mockRecentMessages1 = [
+  Message(
+    id: '1',
+    chatId: '1',
+    senderId: defaultProfile.id,
+    text: 'Hello! I am here to assist you with all of your theological inquiries. Ask away!',
+    timestamp: DateTime.now(),
+  ),
+];
+
+final List<Message> mockRecentMessages2 = [
   Message(
     id: '1',
     chatId: '1',

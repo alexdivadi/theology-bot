@@ -15,6 +15,7 @@ import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'app/features/ai/data/tb_document.dart';
+import 'app/features/profile/domain/profile.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
@@ -57,6 +58,45 @@ final _entities = <obx_int.ModelEntity>[
             ))
       ],
       relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(5, 6174992555003198125),
+      name: 'Profile',
+      lastPropertyId: const obx_int.IdUid(6, 1350532771719394295),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 3163446296991798482),
+            name: 'boxId',
+            type: 6,
+            flags: 129),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 5374135653240222370),
+            name: 'id',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 3365964145155816458),
+            name: 'name',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 7319286834269331115),
+            name: 'profileImageUrl',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 3396348169554592382),
+            name: 'profileThumbnail',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 1350532771719394295),
+            name: 'status',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -95,13 +135,26 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(1, 2246371080391273654),
+      lastEntityId: const obx_int.IdUid(5, 6174992555003198125),
       lastIndexId: const obx_int.IdUid(2, 3116194390691805316),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
-      retiredEntityUids: const [],
+      retiredEntityUids: const [
+        1370905150836732587,
+        8623016825720647224,
+        9116967582977515539
+      ],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [
+        6976096780125484931,
+        7645535157839673527,
+        1319827446310171537,
+        8875982733939597389,
+        6207064549294037064,
+        6703105257602444850,
+        9097676760113123382,
+        3588477275237611149
+      ],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -151,6 +204,64 @@ obx_int.ModelDefinition getObjectBoxModel() {
                 const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
 
           return object;
+        }),
+    Profile: obx_int.EntityDefinition<Profile>(
+        model: _entities[1],
+        toOneRelations: (Profile object) => [],
+        toManyRelations: (Profile object) => {},
+        getId: (Profile object) => object.boxId,
+        setId: (Profile object, int id) {
+          if (object.boxId != id) {
+            throw ArgumentError('Field Profile.boxId is read-only '
+                '(final or getter-only) and it was declared to be self-assigned. '
+                'However, the currently inserted object (.boxId=${object.boxId}) '
+                "doesn't match the inserted ID (ID $id). "
+                'You must assign an ID before calling [box.put()].');
+          }
+        },
+        objectToFB: (Profile object, fb.Builder fbb) {
+          final idOffset = fbb.writeString(object.id);
+          final nameOffset = fbb.writeString(object.name);
+          final profileImageUrlOffset = fbb.writeString(object.profileImageUrl);
+          final profileThumbnailOffset =
+              fbb.writeString(object.profileThumbnail);
+          final statusOffset = fbb.writeString(object.status);
+          fbb.startTable(7);
+          fbb.addInt64(0, object.boxId ?? 0);
+          fbb.addOffset(1, idOffset);
+          fbb.addOffset(2, nameOffset);
+          fbb.addOffset(3, profileImageUrlOffset);
+          fbb.addOffset(4, profileThumbnailOffset);
+          fbb.addOffset(5, statusOffset);
+          fbb.finish(fbb.endTable());
+          return object.boxId ?? 0;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final boxIdParam =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 4);
+          final idParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final nameParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 8, '');
+          final profileImageUrlParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 10, '');
+          final profileThumbnailParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 12, '');
+          final statusParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 14, '');
+          final object = Profile(
+              boxId: boxIdParam,
+              id: idParam,
+              name: nameParam,
+              profileImageUrl: profileImageUrlParam,
+              profileThumbnail: profileThumbnailParam,
+              status: statusParam);
+
+          return object;
         })
   };
 
@@ -178,4 +289,31 @@ class TbDocument_ {
   /// See [TbDocument.embedding].
   static final embedding =
       obx.QueryHnswProperty<TbDocument>(_entities[0].properties[4]);
+}
+
+/// [Profile] entity fields to define ObjectBox queries.
+class Profile_ {
+  /// See [Profile.boxId].
+  static final boxId =
+      obx.QueryIntegerProperty<Profile>(_entities[1].properties[0]);
+
+  /// See [Profile.id].
+  static final id =
+      obx.QueryStringProperty<Profile>(_entities[1].properties[1]);
+
+  /// See [Profile.name].
+  static final name =
+      obx.QueryStringProperty<Profile>(_entities[1].properties[2]);
+
+  /// See [Profile.profileImageUrl].
+  static final profileImageUrl =
+      obx.QueryStringProperty<Profile>(_entities[1].properties[3]);
+
+  /// See [Profile.profileThumbnail].
+  static final profileThumbnail =
+      obx.QueryStringProperty<Profile>(_entities[1].properties[4]);
+
+  /// See [Profile.status].
+  static final status =
+      obx.QueryStringProperty<Profile>(_entities[1].properties[5]);
 }

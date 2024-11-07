@@ -10,6 +10,7 @@ class ProfileTableCell extends StatelessWidget {
     this.padding = Sizes.p16,
     this.iconSize = 40,
     this.titleTextSize = 24,
+    this.titleTextColor,
     this.subtitleTextSize = 16,
     this.showSubtitle = true,
     this.gapSize = Sizes.p16,
@@ -20,6 +21,7 @@ class ProfileTableCell extends StatelessWidget {
   final double iconSize;
   final double titleTextSize;
   final double subtitleTextSize;
+  final Color? titleTextColor;
   final bool showSubtitle;
   final double gapSize;
 
@@ -53,10 +55,12 @@ class ProfileTableCell extends StatelessWidget {
                 style: TextStyle(
                   fontSize: titleTextSize,
                   fontWeight: FontWeight.bold,
+                  color: titleTextColor,
                 ),
+                maxLines: 2,
               ),
-              if (showSubtitle) gapH8,
-              if (showSubtitle)
+              if (showSubtitle && profile.status.isNotEmpty) gapH8,
+              if (showSubtitle && profile.status.isNotEmpty)
                 Text(
                   profile.status,
                   style: TextStyle(

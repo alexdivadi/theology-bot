@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-//import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -17,12 +17,12 @@ FirebaseStorage? firebaseStorage(Ref ref) {
   return null;
 }
 
-// @Riverpod(keepAlive: true)
-// FirebaseFirestore? firebaseFirestore(FirebaseFirestoreRef ref) {
-//   try {
-//     return FirebaseFirestore.instance;
-//   } catch (_) {
-//     log('FirebaseFirestore is not loaded.');
-//   }
-//   return null;
-// }
+@Riverpod(keepAlive: true)
+FirebaseFirestore? firebaseFirestore(Ref ref) {
+  try {
+    return FirebaseFirestore.instance;
+  } catch (_) {
+    log('FirebaseFirestore is not loaded.');
+  }
+  return null;
+}

@@ -20,6 +20,8 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Profile {
+  @Id(assignable: true)
+  int? get boxId => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get profileImageUrl => throw _privateConstructorUsedError;
@@ -41,7 +43,8 @@ abstract class $ProfileCopyWith<$Res> {
       _$ProfileCopyWithImpl<$Res, Profile>;
   @useResult
   $Res call(
-      {String id,
+      {@Id(assignable: true) int? boxId,
+      String id,
       String name,
       String profileImageUrl,
       String profileThumbnail,
@@ -63,6 +66,7 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? boxId = freezed,
     Object? id = null,
     Object? name = null,
     Object? profileImageUrl = null,
@@ -70,6 +74,10 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? status = null,
   }) {
     return _then(_value.copyWith(
+      boxId: freezed == boxId
+          ? _value.boxId
+          : boxId // ignore: cast_nullable_to_non_nullable
+              as int?,
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -102,7 +110,8 @@ abstract class _$$ProfileImplCopyWith<$Res> implements $ProfileCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String id,
+      {@Id(assignable: true) int? boxId,
+      String id,
       String name,
       String profileImageUrl,
       String profileThumbnail,
@@ -122,6 +131,7 @@ class __$$ProfileImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? boxId = freezed,
     Object? id = null,
     Object? name = null,
     Object? profileImageUrl = null,
@@ -129,6 +139,10 @@ class __$$ProfileImplCopyWithImpl<$Res>
     Object? status = null,
   }) {
     return _then(_$ProfileImpl(
+      boxId: freezed == boxId
+          ? _value.boxId
+          : boxId // ignore: cast_nullable_to_non_nullable
+              as int?,
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -155,9 +169,11 @@ class __$$ProfileImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
+@Entity(realClass: Profile)
 class _$ProfileImpl implements _Profile {
   const _$ProfileImpl(
-      {required this.id,
+      {@Id(assignable: true) this.boxId,
+      required this.id,
       required this.name,
       required this.profileImageUrl,
       required this.profileThumbnail,
@@ -166,6 +182,9 @@ class _$ProfileImpl implements _Profile {
   factory _$ProfileImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProfileImplFromJson(json);
 
+  @override
+  @Id(assignable: true)
+  final int? boxId;
   @override
   final String id;
   @override
@@ -179,7 +198,7 @@ class _$ProfileImpl implements _Profile {
 
   @override
   String toString() {
-    return 'Profile(id: $id, name: $name, profileImageUrl: $profileImageUrl, profileThumbnail: $profileThumbnail, status: $status)';
+    return 'Profile(boxId: $boxId, id: $id, name: $name, profileImageUrl: $profileImageUrl, profileThumbnail: $profileThumbnail, status: $status)';
   }
 
   @override
@@ -187,6 +206,7 @@ class _$ProfileImpl implements _Profile {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProfileImpl &&
+            (identical(other.boxId, boxId) || other.boxId == boxId) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.profileImageUrl, profileImageUrl) ||
@@ -199,7 +219,7 @@ class _$ProfileImpl implements _Profile {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, name, profileImageUrl, profileThumbnail, status);
+      runtimeType, boxId, id, name, profileImageUrl, profileThumbnail, status);
 
   /// Create a copy of Profile
   /// with the given fields replaced by the non-null parameter values.
@@ -219,7 +239,8 @@ class _$ProfileImpl implements _Profile {
 
 abstract class _Profile implements Profile {
   const factory _Profile(
-      {required final String id,
+      {@Id(assignable: true) final int? boxId,
+      required final String id,
       required final String name,
       required final String profileImageUrl,
       required final String profileThumbnail,
@@ -227,6 +248,9 @@ abstract class _Profile implements Profile {
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$ProfileImpl.fromJson;
 
+  @override
+  @Id(assignable: true)
+  int? get boxId;
   @override
   String get id;
   @override

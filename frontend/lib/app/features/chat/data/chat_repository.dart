@@ -5,10 +5,10 @@ import 'package:theology_bot/app/mock/data/chats.dart';
 
 part 'chat_repository.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ChatRepository extends _$ChatRepository {
   @override
-  List<Chat> build() => mockChats;
+  List<Chat> build() => [chat1];
 
   void addChat(Chat chat) {
     state = [...state, chat];

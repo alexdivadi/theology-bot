@@ -61,10 +61,13 @@ class ChatScreen extends HookConsumerWidget {
               ),
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(20),
-                child: Text(chat.name),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: Sizes.p8),
+                  child: Text(chat.name),
+                ),
               ),
               title: ProfileIcon(
-                ref.read(profileRepositoryProvider.notifier).getProfile(
+                ref.read(profileRepositoryProvider).getProfile(
                       chat.participantIds.singleWhere((p) => p != userProfile.id),
                     ),
               ),
@@ -80,7 +83,7 @@ class ChatScreen extends HookConsumerWidget {
                 itemBuilder: (context, index) {
                   final message = chat.messagesReversed[index];
                   final senderProfile =
-                      ref.read(profileRepositoryProvider.notifier).getProfile(message.senderId);
+                      ref.read(profileRepositoryProvider).getProfile(message.senderId);
                   return _buildMessageBubble(
                     message,
                     senderProfile,
@@ -112,8 +115,8 @@ class ChatScreen extends HookConsumerWidget {
   Widget _buildMessageBubble(Message message, Profile senderProfile, {bool isGroupChat = false}) {
     final isCurrentUser = senderProfile == userProfile;
     final alignment = isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start;
-    final bubbleColor = isCurrentUser ? Colors.blue[100] : Colors.grey[300];
-    final textColor = isCurrentUser ? Colors.black : Colors.black;
+    final bubbleColor = isCurrentUser ? Colors.blue : Colors.grey[300];
+    final textColor = isCurrentUser ? Colors.white : Colors.black;
 
     return MessageBubble(
       alignment: alignment,

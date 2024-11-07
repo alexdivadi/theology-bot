@@ -8,6 +8,14 @@ const Profile userProfile = Profile(
   status: 'None',
 );
 
+const Profile defaultProfile = Profile(
+  id: 'default',
+  name: 'General',
+  profileImageUrl: 'https://www.walkthru.org/wp-content/uploads/Bible-reading-4-1024x683.jpg',
+  profileThumbnail: 'https://www.walkthru.org/wp-content/uploads/Bible-reading-4-1024x683.jpg',
+  status: 'Here to help',
+);
+
 const Profile profile1 = Profile(
   id: 'aquinas',
   name: 'St. Thomas Aquinas',
@@ -38,6 +46,7 @@ const Profile profile4 = Profile(
 );
 
 final List<Profile> mockProfiles = [
+  defaultProfile,
   profile1,
   profile2,
   profile3,

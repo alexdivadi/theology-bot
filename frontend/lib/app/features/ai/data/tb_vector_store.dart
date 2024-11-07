@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:langchain/langchain.dart';
 import 'package:langchain_community/langchain_community.dart';
 import 'package:theology_bot/app/features/ai/data/tb_document.dart';
 import 'package:theology_bot/objectbox.g.dart';
@@ -28,8 +31,24 @@ class TbVectorStore extends BaseObjectBoxVectorStore<TbDocument> {
   /// The ObjectBox store.
   static Store? _store;
 
-  static Store _createOrGetStore(Store store) {
-    return _store ??= store;
+  static Store _createOrGetStore(Store store) => _store ??= store;
+
+  String? getDocument(int id) {
+    if (_store == null) {
+      log('Attempted to access document before store was initialized.');
+      return null;
+    }
+    final box = _store!.box<TbDocument>();
+    return box.get(id)?.content;
+  }
+
+  @override
+  Future<List<String>> addDocuments({required List<Document> documents}) async {
+    return addVectors(
+      //await embeddings.embedDocuments(documents),
+      vectors: List.generate(documents.length, (doc) => [0.0]),
+      documents: documents,
+    );
   }
 
   void close() {

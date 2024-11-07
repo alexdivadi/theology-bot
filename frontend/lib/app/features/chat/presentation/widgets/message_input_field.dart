@@ -36,6 +36,7 @@ class MessageInputField extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.send),
             onPressed: onSend,
+            color: Theme.of(context).primaryColor,
           ),
         ],
       ),

@@ -1,6 +1,8 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:theology_bot/app/features/profile/data/profile_box.dart';
 import 'package:theology_bot/app/features/profile/data/profile_repository.dart';
+import 'package:theology_bot/app/mock/providers/profile_box.dart';
 import 'package:theology_bot/app/mock/providers/profile_repository.dart';
 
 class TestProviderScope extends StatelessWidget {
@@ -11,7 +13,16 @@ class TestProviderScope extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ProviderScope(
         overrides: [
-          profileRepositoryProvider.overrideWith(() => MockProfileRepository()),
+          profileBoxProvider.overrideWith(
+            (_) => Future.delayed(
+              Durations.long1,
+              () => MockProfileBox(),
+            ),
+          ),
+          profileRepositoryProvider.overrideWith((ref) {
+            final box = ref.watch(profileBoxProvider).requireValue;
+            return MockProfileRepository(box: box);
+          }),
         ],
         child: child,
       );

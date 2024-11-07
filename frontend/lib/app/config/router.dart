@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:theology_bot/app/config/app_startup.dart';
 import 'package:theology_bot/app/config/navigation_scaffold.dart';
 import 'package:theology_bot/app/features/chat/presentation/screens/chat_list_screen.dart';
 import 'package:theology_bot/app/features/chat/presentation/screens/chat_screen.dart';
@@ -17,15 +19,36 @@ final _shellNavigatorAKey = GlobalKey<NavigatorState>(debugLabel: 'chatList');
 final _shellNavigatorBKey = GlobalKey<NavigatorState>(debugLabel: 'profileList');
 
 @riverpod
-GoRouter goRouter(GoRouterRef ref) {
+GoRouter goRouter(Ref ref) {
+  final appStartupState = ref.watch(appStartupProvider);
   return GoRouter(
     initialLocation: ChatListScreen.path,
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,
     redirect: (context, state) {
+      // If the app is still initializing, show the /startup route
+      if (appStartupState.isLoading || appStartupState.hasError) {
+        return AppStartupScreen.path;
+      }
+
+      // After startup, redirect to chat list screen
+      if (state.uri.path.startsWith(AppStartupScreen.path)) {
+        return ChatListScreen.path;
+      }
+
       return null;
     },
     routes: [
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppStartupScreen.path,
+        name: AppStartupScreen.name,
+        pageBuilder: (_, state) => NoTransitionPage(
+          child: AppStartupScreen(
+            onLoaded: (_) => const SizedBox.shrink(),
+          ),
+        ),
+      ),
       StatefulShellRoute.indexedStack(
         pageBuilder: (_, __, navigationShell) {
           return NoTransitionPage(child: NavigationScaffold(navigationShell: navigationShell));

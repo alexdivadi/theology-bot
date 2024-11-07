@@ -110,7 +110,7 @@ class ProfileScreen extends ConsumerWidget {
             child: Text(
               profile.name,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontSize: 48),
+              style: const TextStyle(color: Colors.white, fontSize: 32),
             ),
           ),
         ],

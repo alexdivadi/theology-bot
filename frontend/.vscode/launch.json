@@ -15,6 +15,16 @@
       ]
     },
     {
+      "name": "Launch test",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_test.dart",
+      "args": [
+        "--flavor", "dev", 
+        "--target", "lib/main_test.dart",
+      ]
+    },
+    {
       "name": "Launch staging",
       "request": "launch",
       "type": "dart",

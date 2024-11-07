@@ -13,13 +13,13 @@ part 'chat_screen_controller.g.dart';
 @riverpod
 class ChatScreenController extends _$ChatScreenController {
   @override
-  FutureOr<void> build() async => null;
+  FutureOr<void> build() {}
 
   FutureOr<void> sendMessage(Chat chat, String message) async {
     state = const AsyncLoading();
     final profile = chat.participantIds.length == 2
         // get the other chatter's profile
-        ? ref.read(profileRepositoryProvider.notifier).getProfile(
+        ? ref.read(profileRepositoryProvider).getProfile(
               chat.participantIds.singleWhere(
                 (member) => member != userProfile.id,
               ),

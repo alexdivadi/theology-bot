@@ -6,13 +6,13 @@ part of 'profile_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$profileRepositoryHash() => r'fa5f1643a4526348c68d2660cd2db83034d5be98';
+String _$profileRepositoryHash() => r'328d631e63e82f2dd5d6a9f14ef4315c2df7f167';
 
-/// See also [ProfileRepository].
-@ProviderFor(ProfileRepository)
+/// See also [profileRepository].
+@ProviderFor(profileRepository)
 final profileRepositoryProvider =
-    AutoDisposeNotifierProvider<ProfileRepository, List<Profile>>.internal(
-  ProfileRepository.new,
+    AutoDisposeProvider<ProfileRepository>.internal(
+  profileRepository,
   name: r'profileRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
@@ -21,6 +21,8 @@ final profileRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ProfileRepository = AutoDisposeNotifier<List<Profile>>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef ProfileRepositoryRef = AutoDisposeProviderRef<ProfileRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
