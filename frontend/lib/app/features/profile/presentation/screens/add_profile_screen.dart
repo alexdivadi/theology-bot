@@ -21,7 +21,7 @@ class AddProfileScreen extends ConsumerWidget {
     final profilesQuery =
         ref.watch(firebaseFirestoreProvider)?.collection('profiles').orderBy('name');
     final state = ref.watch(addProfileScreenControllerProvider);
-    final profiles = ref.watch(profilesProvider);
+    final profileIds = ref.watch(profilesProvider).map((p) => p.id).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -40,8 +40,8 @@ class AddProfileScreen extends ConsumerWidget {
                     final profile = Profile.fromJson(snapshot.data());
                     return _buildProfileCard(
                       profile,
-                      disabled: profiles.contains(profile) || state.isLoading,
-                      isDownloaded: profiles.contains(profile),
+                      disabled: profileIds.contains(profile.id) || state.isLoading,
+                      isDownloaded: profileIds.contains(profile.id),
                       onTap: state.isLoading
                           ? null
                           : () => ref

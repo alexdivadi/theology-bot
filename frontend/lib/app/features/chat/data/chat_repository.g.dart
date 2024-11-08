@@ -8,7 +8,9 @@ part of 'chat_repository.dart';
 
 String _$chatRepositoryHash() => r'08e5d682061f7af519bacf8af4307c8a2a573316';
 
-/// See also [ChatRepository].
+/// A Riverpod provider for managing chat data.
+///
+/// Copied from [ChatRepository].
 @ProviderFor(ChatRepository)
 final chatRepositoryProvider =
     NotifierProvider<ChatRepository, List<Chat>>.internal(

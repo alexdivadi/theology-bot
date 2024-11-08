@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:math' hide log;
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:langchain/langchain.dart';
@@ -8,9 +7,10 @@ import 'package:langchain_community/langchain_community.dart';
 import 'package:langchain_openai/langchain_openai.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:theology_bot/app/features/ai/data/tb_vector_store.dart';
+import 'package:theology_bot/app/features/ai/domain/tb_vector_store.dart';
 import 'package:theology_bot/app/features/chat/data/chat_repository.dart';
 import 'package:theology_bot/app/features/firebase/firebase_repository.dart';
+import 'package:theology_bot/app/features/profile/data/profile_box.dart';
 import 'package:theology_bot/app/features/profile/domain/profile.dart';
 import 'package:theology_bot/app/mock/data/profiles.dart';
 import 'package:path/path.dart' as p;
@@ -19,6 +19,7 @@ import 'package:theology_bot/objectbox.g.dart';
 
 part 'langchain_repository.g.dart';
 
+/// Repository for managing Langchain operations.
 @Riverpod(keepAlive: true)
 class LangchainRepository extends _$LangchainRepository {
   static const maxMemorySize = 1024 * 1024 * 5; // 5MB
@@ -48,9 +49,25 @@ class LangchainRepository extends _$LangchainRepository {
         store.close();
       }
     });
+
+    // pre-load profile vectorstores
+    final profileIds = ref.watch(profilesProvider).map((p) => p.id).toList();
+
+    for (String profileId in profileIds) {
+      if (profileId != defaultProfile.id) {
+        // async operation
+        _getOrCreateVectorStore(profileId);
+      }
+    }
+
     firebaseStorage = ref.watch(firebaseStorageProvider);
   }
 
+  /// Loads chat history for a given chat ID.
+  ///
+  /// - [chatId] The ID of the chat to load history for.
+  ///
+  /// Returns a list of [ChatMessage] objects representing the chat history.
   FutureOr<List<ChatMessage>> loadChatHistory(String chatId) async {
     final messages = ref
         .read(chatRepositoryProvider)
@@ -74,22 +91,33 @@ class LangchainRepository extends _$LangchainRepository {
         .toList();
   }
 
+  /// Adds documents to the vector store for a given profile ID.
+  ///
+  /// - [profileId] The ID of the profile to add documents to.
+  /// - [documents] The list of documents to add.
   Future<void> addDocuments(String profileId, List<Document> documents) async {
     final vectorStore = await _getOrCreateVectorStore(profileId);
     await vectorStore.addDocuments(documents: documents);
   }
 
+  /// Loads documents from Firebase Storage for a given profile ID.
+  ///
+  /// - [profileId] The ID of the profile to load documents for.
+  ///
+  /// Throws an exception if Firebase is not loaded.
   Future<void> loadDocumentsFromFirebaseStorage(String profileId) async {
     if (firebaseStorage == null) {
       throw Exception('Firebase is not loaded');
     }
 
-    final vectorStore = await _getOrCreateVectorStore(profileId);
+    final vectorStore = await _getOrCreateVectorStore(profileId) as TbVectorStore;
     final storageRef = firebaseStorage!.ref().child(profileId);
     final textRefs = await storageRef.listAll();
     final ids = List<String>.empty(growable: true);
 
     await Future.forEach(textRefs.items, (Reference result) async {
+      if (!result.name.endsWith('.txt')) return;
+
       try {
         final text = await result.getData(maxMemorySize);
 
@@ -111,14 +139,16 @@ class LangchainRepository extends _$LangchainRepository {
         }
       } catch (e) {
         vectorStore.delete(ids: ids);
-        log(
-          '$e',
-          error: e,
-        );
+        log('$e', error: e);
+        rethrow;
       }
     });
   }
 
+  /// Loads documents from the web for a given profile ID.
+  ///
+  /// - [profileId] The ID of the profile to load documents for.
+  /// - [urls] The list of URLs to load documents from.
   Future<void> loadDocumentsFromWeb(String profileId, List<String> urls) async {
     final loader = WebBaseLoader(urls);
     final List<Document> docs = await loader.load();
@@ -128,19 +158,28 @@ class LangchainRepository extends _$LangchainRepository {
     await addDocuments(profileId, chunkedDocs);
   }
 
+  /// Gets or creates a vector store for a given profile ID.
+  ///
+  /// - [profileId] The ID of the profile to get or create a vector store for.
+  ///
+  /// Returns the [BaseObjectBoxVectorStore] for the profile.
   FutureOr<BaseObjectBoxVectorStore> _getOrCreateVectorStore(String profileId) async {
-    if (!vectorStoreMap.containsKey(profileId)) {
-      final docsDir = await getApplicationDocumentsDirectory();
-      final store = await openStore(directory: p.join(docsDir.path, profileId));
-      final vectorStore = TbVectorStore(
-        embeddings: embeddings,
-        store: store,
-      );
-      vectorStoreMap[profileId] = vectorStore;
-    }
-    return vectorStoreMap[profileId]!;
+    if (vectorStoreMap.containsKey(profileId)) return vectorStoreMap[profileId]!;
+
+    final docsDir = await getApplicationDocumentsDirectory();
+    final store = await openStore(directory: p.join(docsDir.path, profileId));
+    final vectorStore = TbVectorStore(
+      embeddings: embeddings,
+      store: store,
+    );
+    vectorStoreMap[profileId] = vectorStore;
+    return vectorStore;
   }
 
+  /// Sets up a retrieval chain for a given ID and profile.
+  ///
+  /// - [id] The ID to set up the retrieval chain for.
+  /// - [profile] The profile to use for the retrieval chain.
   Future<void> setUpRetrievalChain({required String id, Profile? profile}) async {
     final Runnable<String, RunnableOptions, Map<String, dynamic>> setupAndRetrieval;
     final ChatPromptTemplate promptTemplate;
@@ -195,6 +234,13 @@ the following in your response:\n{context}'''
     chainMap[id] = setupAndRetrieval.pipe(promptTemplate).pipe(model).pipe(outputParser);
   }
 
+  /// Gets a response for a given question, chat ID, and profile.
+  ///
+  /// - [question] The question to get a response for.
+  /// - [chatId] The ID of the chat to get a response for.
+  /// - [profile] The profile to use for the response.
+  ///
+  /// Returns the response as a string.
   Future<String> getResponse(
     String question, {
     String? chatId,

@@ -14,7 +14,7 @@ import 'package:objectbox/internal.dart'
 import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
-import 'app/features/ai/data/tb_document.dart';
+import 'app/features/ai/domain/tb_document.dart';
 import 'app/features/profile/domain/profile.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
@@ -60,38 +60,39 @@ final _entities = <obx_int.ModelEntity>[
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[]),
   obx_int.ModelEntity(
-      id: const obx_int.IdUid(5, 6174992555003198125),
+      id: const obx_int.IdUid(6, 224130010904490608),
       name: 'Profile',
-      lastPropertyId: const obx_int.IdUid(6, 1350532771719394295),
+      lastPropertyId: const obx_int.IdUid(6, 8965919774584081652),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(1, 3163446296991798482),
+            id: const obx_int.IdUid(1, 4296026325912946668),
             name: 'boxId',
             type: 6,
-            flags: 129),
+            flags: 1),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(2, 5374135653240222370),
+            id: const obx_int.IdUid(2, 6982771925802327144),
             name: 'id',
             type: 9,
-            flags: 0),
+            flags: 2080,
+            indexId: const obx_int.IdUid(3, 1406737739599029238)),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(3, 3365964145155816458),
+            id: const obx_int.IdUid(3, 7107130893629035554),
             name: 'name',
             type: 9,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(4, 7319286834269331115),
+            id: const obx_int.IdUid(4, 5958229889687295430),
             name: 'profileImageUrl',
             type: 9,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(5, 3396348169554592382),
+            id: const obx_int.IdUid(5, 8837760849748310328),
             name: 'profileThumbnail',
             type: 9,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(6, 1350532771719394295),
+            id: const obx_int.IdUid(6, 8965919774584081652),
             name: 'status',
             type: 9,
             flags: 0)
@@ -135,14 +136,15 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(5, 6174992555003198125),
-      lastIndexId: const obx_int.IdUid(2, 3116194390691805316),
+      lastEntityId: const obx_int.IdUid(6, 224130010904490608),
+      lastIndexId: const obx_int.IdUid(3, 1406737739599029238),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [
         1370905150836732587,
         8623016825720647224,
-        9116967582977515539
+        9116967582977515539,
+        6174992555003198125
       ],
       retiredIndexUids: const [],
       retiredPropertyUids: const [
@@ -153,7 +155,13 @@ obx_int.ModelDefinition getObjectBoxModel() {
         6207064549294037064,
         6703105257602444850,
         9097676760113123382,
-        3588477275237611149
+        3588477275237611149,
+        3163446296991798482,
+        5374135653240222370,
+        3365964145155816458,
+        7319286834269331115,
+        3396348169554592382,
+        1350532771719394295
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -211,13 +219,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         toManyRelations: (Profile object) => {},
         getId: (Profile object) => object.boxId,
         setId: (Profile object, int id) {
-          if (object.boxId != id) {
-            throw ArgumentError('Field Profile.boxId is read-only '
-                '(final or getter-only) and it was declared to be self-assigned. '
-                'However, the currently inserted object (.boxId=${object.boxId}) '
-                "doesn't match the inserted ID (ID $id). "
-                'You must assign an ID before calling [box.put()].');
-          }
+          object.boxId = id;
         },
         objectToFB: (Profile object, fb.Builder fbb) {
           final idOffset = fbb.writeString(object.id);
@@ -227,20 +229,20 @@ obx_int.ModelDefinition getObjectBoxModel() {
               fbb.writeString(object.profileThumbnail);
           final statusOffset = fbb.writeString(object.status);
           fbb.startTable(7);
-          fbb.addInt64(0, object.boxId ?? 0);
+          fbb.addInt64(0, object.boxId);
           fbb.addOffset(1, idOffset);
           fbb.addOffset(2, nameOffset);
           fbb.addOffset(3, profileImageUrlOffset);
           fbb.addOffset(4, profileThumbnailOffset);
           fbb.addOffset(5, statusOffset);
           fbb.finish(fbb.endTable());
-          return object.boxId ?? 0;
+          return object.boxId;
         },
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
           final boxIdParam =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 4);
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           final idParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 6, '');
           final nameParam = const fb.StringReader(asciiOptimization: true)

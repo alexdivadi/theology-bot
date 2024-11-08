@@ -7,9 +7,11 @@ part of 'langchain_repository.dart';
 // **************************************************************************
 
 String _$langchainRepositoryHash() =>
-    r'b1db8d46f0a7e55ab9e692c8886e16c1ebeb9bbb';
+    r'f7919a654c0ea8ddbbc1052c41b1508d6fdcab07';
 
-/// See also [LangchainRepository].
+/// Repository for managing Langchain operations.
+///
+/// Copied from [LangchainRepository].
 @ProviderFor(LangchainRepository)
 final langchainRepositoryProvider =
     NotifierProvider<LangchainRepository, void>.internal(

@@ -8,7 +8,11 @@ part of 'profile_repository.dart';
 
 String _$profileRepositoryHash() => r'328d631e63e82f2dd5d6a9f14ef4315c2df7f167';
 
-/// See also [profileRepository].
+/// A Riverpod provider that returns a [ProfileRepository].
+///
+/// Returns a [ProfileRepository] that uses the profile box.
+///
+/// Copied from [profileRepository].
 @ProviderFor(profileRepository)
 final profileRepositoryProvider =
     AutoDisposeProvider<ProfileRepository>.internal(

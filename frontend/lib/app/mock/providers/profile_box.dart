@@ -1,8 +1,15 @@
+import 'dart:async';
 import 'dart:developer';
 
+import 'package:theology_bot/app/features/profile/data/profile_box.dart';
 import 'package:theology_bot/app/features/profile/domain/profile.dart';
 import 'package:theology_bot/app/mock/data/profiles.dart';
 import 'package:theology_bot/objectbox.g.dart';
+
+class MockProfileBoxNotifier extends ProfileBox {
+  @override
+  FutureOr<Box<Profile>> build() => MockProfileBox();
+}
 
 class MockProfileBox implements Box<Profile> {
   List<Profile> profiles = mockProfiles;

@@ -45,7 +45,7 @@ class AppStartupLoadingWidget extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator.adaptive(),
       ),
     );
   }

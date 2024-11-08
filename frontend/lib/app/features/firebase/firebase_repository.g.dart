@@ -8,7 +8,11 @@ part of 'firebase_repository.dart';
 
 String _$firebaseStorageHash() => r'24c7752ac0b97c4f366359eec1fcc5c355c28f4c';
 
-/// See also [firebaseStorage].
+/// A Riverpod provider that returns an instance of [FirebaseStorage].
+///
+/// Returns an instance of [FirebaseStorage] if it is successfully loaded, otherwise returns `null`.
+///
+/// Copied from [firebaseStorage].
 @ProviderFor(firebaseStorage)
 final firebaseStorageProvider = Provider<FirebaseStorage?>.internal(
   firebaseStorage,
@@ -25,7 +29,11 @@ final firebaseStorageProvider = Provider<FirebaseStorage?>.internal(
 typedef FirebaseStorageRef = ProviderRef<FirebaseStorage?>;
 String _$firebaseFirestoreHash() => r'959f906ccd3d51963a6f4aa5b065d4e5872dedbe';
 
-/// See also [firebaseFirestore].
+/// A Riverpod provider that returns an instance of [FirebaseFirestore].
+///
+/// Returns an instance of [FirebaseFirestore] if it is successfully loaded, otherwise returns `null`.
+///
+/// Copied from [firebaseFirestore].
 @ProviderFor(firebaseFirestore)
 final firebaseFirestoreProvider = Provider<FirebaseFirestore?>.internal(
   firebaseFirestore,

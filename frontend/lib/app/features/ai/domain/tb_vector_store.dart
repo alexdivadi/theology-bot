@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:langchain/langchain.dart';
 import 'package:langchain_community/langchain_community.dart';
-import 'package:theology_bot/app/features/ai/data/tb_document.dart';
+import 'package:theology_bot/app/features/ai/domain/tb_document.dart';
 import 'package:theology_bot/objectbox.g.dart';
 
 class TbVectorStore extends BaseObjectBoxVectorStore<TbDocument> {

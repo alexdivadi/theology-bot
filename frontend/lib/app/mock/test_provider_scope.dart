@@ -13,12 +13,7 @@ class TestProviderScope extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ProviderScope(
         overrides: [
-          profileBoxProvider.overrideWith(
-            (_) => Future.delayed(
-              Durations.long1,
-              () => MockProfileBox(),
-            ),
-          ),
+          profileBoxProvider.overrideWith(() => MockProfileBoxNotifier()),
           profileRepositoryProvider.overrideWith((ref) {
             final box = ref.watch(profileBoxProvider).requireValue;
             return MockProfileRepository(box: box);
